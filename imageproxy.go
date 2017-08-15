@@ -30,9 +30,9 @@ import (
 	"strings"
 	"time"
 
+	tphttp "github.com/NOWnews/imageapi/third_party/http"
 	"github.com/golang/glog"
 	"github.com/gregjones/httpcache"
-	tphttp "willnorris.com/go/imageproxy/third_party/http"
 )
 
 // Proxy serves image requests.

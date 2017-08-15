@@ -127,8 +127,6 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 	cached := resp.Header.Get(httpcache.XFromCache)
 	glog.Infof("request: %v (served from cache: %v)", *req, cached == "1")
 
-	fmt.Println("______________")
-
 	copyHeader(w.Header(), resp.Header, "Cache-Control", "Last-Modified", "Expires", "Etag", "Link")
 
 	if should304(r, resp) {

@@ -140,7 +140,19 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	w.WriteHeader(resp.StatusCode)
+	// add by Cyril
+	buffer := bytes.NewBuffer(make([]byte, 0, 20000000))
 	io.Copy(w, resp.Body)
+	temp := buffer.Bytes()
+	length := len(temp)
+	var body []byte
+	//are we wasting more than 10% space?
+	if cap(temp) > (length + length/10) {
+		body = make([]byte, length)
+		copy(body, temp)
+	} else {
+		body = temp
+	}
 }
 
 // copyHeader copies header values from src to dst, adding to any existing

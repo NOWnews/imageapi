@@ -1,0 +1,127 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "YmarTNe8NlR3nkpX6MoCvhisfoA=",
+			"path": "github.com/disintegration/imaging",
+			"revision": "ac27d1805a555e1754fa177216ee07f4e63c30b5",
+			"revisionTime": "2017-03-19T14:47:19Z"
+		},
+		{
+			"checksumSHA1": "HmbftipkadrLlCfzzVQ+iFHbl6g=",
+			"path": "github.com/golang/glog",
+			"revision": "23def4e6c14b4da8ac2ed8007337bc5eb5007998",
+			"revisionTime": "2016-01-25T20:49:56Z"
+		},
+		{
+			"checksumSHA1": "kHrNY4ktruLxWd+qxbMw90KfO1Y=",
+			"path": "github.com/google/btree",
+			"revision": "316fb6d3f031ae8f4d457c6c5186b9e3ded70435",
+			"revisionTime": "2016-12-17T18:35:37Z"
+		},
+		{
+			"checksumSHA1": "89AgVeQ6dU0XqFSgYG+fQ5rqp/8=",
+			"path": "github.com/gregjones/httpcache",
+			"revision": "0d2297f241a3503b4d464cd434e6d1490ec76e9a",
+			"revisionTime": "2017-04-24T21:01:39Z"
+		},
+		{
+			"checksumSHA1": "A+TX1jxqy7iWvcb9ZldoG1b5SsY=",
+			"path": "github.com/gregjones/httpcache/diskcache",
+			"revision": "0d2297f241a3503b4d464cd434e6d1490ec76e9a",
+			"revisionTime": "2017-04-24T21:01:39Z"
+		},
+		{
+			"checksumSHA1": "Th+zE6hHI4jpczGj+JNsqDJrJgI=",
+			"path": "github.com/kr/http/transport",
+			"revision": "77bd98b60462aab91988ae155ecc11a74833f5b7",
+			"revisionTime": "2015-05-05T21:27:37Z"
+		},
+		{
+			"checksumSHA1": "Hc7LMQrHR71kkSsd/P/SBdiC258=",
+			"path": "github.com/petar/GoLLRB/llrb",
+			"revision": "53be0d36a84c2a886ca057d34b6aa4468df9ccb4",
+			"revisionTime": "2013-04-27T21:51:48Z"
+		},
+		{
+			"checksumSHA1": "GfnXm54E98jxQJMXPZz0LbPVaRc=",
+			"path": "github.com/peterbourgon/diskv",
+			"revision": "5dfcb07a075adbaaa4094cddfd160b1e1c77a043",
+			"revisionTime": "2016-04-04T09:36:48Z"
+		},
+		{
+			"checksumSHA1": "keGfp7Lfr4cPUiZjLpHzZWrHEzM=",
+			"path": "github.com/sqs/s3",
+			"revision": "ee47412d98d9637046a7096f24809bc45f6bcbd5",
+			"revisionTime": "2015-02-03T11:00:30Z"
+		},
+		{
+			"checksumSHA1": "ki3xti8X7mLGmAWZoYZiBAJYQ8M=",
+			"path": "github.com/sqs/s3/s3util",
+			"revision": "ee47412d98d9637046a7096f24809bc45f6bcbd5",
+			"revisionTime": "2015-02-03T11:00:30Z"
+		},
+		{
+			"checksumSHA1": "UD/pejajPyS7WaWVXq2NU1eK4Ic=",
+			"path": "golang.org/x/image/bmp",
+			"revision": "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d",
+			"revisionTime": "2017-05-14T06:33:48Z"
+		},
+		{
+			"checksumSHA1": "zdekzNuFGSoxAZ8cURGsrhBObZs=",
+			"path": "golang.org/x/image/riff",
+			"revision": "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d",
+			"revisionTime": "2017-05-14T06:33:48Z"
+		},
+		{
+			"checksumSHA1": "SmD/LkP3vgBGPKT6I38wH7Jb6QI=",
+			"path": "golang.org/x/image/tiff",
+			"revision": "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d",
+			"revisionTime": "2017-05-14T06:33:48Z"
+		},
+		{
+			"checksumSHA1": "PF6VjvpNpOdR8epWH1Liyy7x1Qg=",
+			"path": "golang.org/x/image/tiff/lzw",
+			"revision": "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d",
+			"revisionTime": "2017-05-14T06:33:48Z"
+		},
+		{
+			"checksumSHA1": "ebUbLKyTEaupuKj5KsceDfkn+UA=",
+			"path": "golang.org/x/image/vp8",
+			"revision": "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d",
+			"revisionTime": "2017-05-14T06:33:48Z"
+		},
+		{
+			"checksumSHA1": "MF/A3WDD30iVwlktK0itZ0PTJho=",
+			"path": "golang.org/x/image/vp8l",
+			"revision": "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d",
+			"revisionTime": "2017-05-14T06:33:48Z"
+		},
+		{
+			"checksumSHA1": "wwirbKM4d69iWA4s9JwpXTsda3A=",
+			"path": "golang.org/x/image/webp",
+			"revision": "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d",
+			"revisionTime": "2017-05-14T06:33:48Z"
+		},
+		{
+			"checksumSHA1": "Q+QuePyosoyKLP7tHNe3iREV+mc=",
+			"path": "golang.org/x/image/webp/nycbcra",
+			"revision": "426cfd8eeb6e08ab1932954e09e3c2cb2bc6e36d",
+			"revisionTime": "2017-05-14T06:33:48Z"
+		},
+		{
+			"checksumSHA1": "Oz2aQiusOZOpefTB6nCKW+vzrWA=",
+			"path": "sourcegraph.com/sourcegraph/s3cache",
+			"revision": "4150cc6b046500fb69804e34aa4a1ca8be361bcb",
+			"revisionTime": "2014-12-02T19:37:49Z"
+		},
+		{
+			"checksumSHA1": "cBdDkft9ir+lyLbeRQ4zCAoR0AY=",
+			"path": "willnorris.com/go/gifresize",
+			"revision": "6a222229fa0697e6da06ec80f8ffd0ada346669d",
+			"revisionTime": "2016-04-28T23:14:23Z"
+		}
+	],
+	"rootPath": "willnorris.com/go/imageproxy"
+}

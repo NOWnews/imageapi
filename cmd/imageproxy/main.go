@@ -24,7 +24,8 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/NOWnews/imageapi"
+	"imageapi/imageproxy"
+
 	"github.com/gregjones/httpcache"
 	"github.com/gregjones/httpcache/diskcache"
 	"github.com/peterbourgon/diskv"
@@ -98,6 +99,7 @@ func main() {
 		Addr:    *addr,
 		Handler: p,
 	}
+	fmt.Println("======")
 	fmt.Printf("imageproxy (version %v) listening on %s\n", VERSION, server.Addr)
 	log.Fatal(server.ListenAndServe())
 }
@@ -121,9 +123,6 @@ func parseCache() (imageproxy.Cache, error) {
 	}
 
 	switch u.Scheme {
-	case "s3":
-		u.Scheme = "https"
-		return s3cache.New(u.String()), nil
 	case "file":
 		fallthrough
 	default:

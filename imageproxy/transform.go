@@ -54,6 +54,7 @@ func Transform(img []byte, opt Options) ([]byte, error) {
 
 	// transform and encode image
 	buf := new(bytes.Buffer)
+	fmt.Println(format)
 	switch format {
 	case "gif":
 		fn := func(img image.Image) image.Image {

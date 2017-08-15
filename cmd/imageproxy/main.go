@@ -23,6 +23,7 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"net/url"
+	"runtime/debug"
 	"strings"
 
 	"imageapi/imageproxy"
@@ -137,5 +138,6 @@ func diskCache(path string) *diskcache.Cache {
 		// For file "c0ffee", store file as "c0/ff/c0ffee"
 		Transform: func(s string) []string { return []string{s[0:2], s[2:4]} },
 	})
+	debug.FreeOSMemory()
 	return diskcache.NewWithDiskv(d)
 }

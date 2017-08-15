@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"runtime/debug"
 	"strings"
 	"time"
 
@@ -120,6 +121,7 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 		msg := fmt.Sprintf("error fetching remote image: %v", err)
 		glog.Error(msg)
 		http.Error(w, msg, http.StatusInternalServerError)
+		debug.FreeOSMemory()
 		return
 	}
 	defer resp.Body.Close()
@@ -131,6 +133,7 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 
 	if should304(r, resp) {
 		w.WriteHeader(http.StatusNotModified)
+		debug.FreeOSMemory()
 		return
 	}
 
@@ -140,19 +143,9 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
 	w.WriteHeader(resp.StatusCode)
-	// add by Cyril
-	buffer := bytes.NewBuffer(make([]byte, 0, 20000000))
+
 	io.Copy(w, resp.Body)
-	temp := buffer.Bytes()
-	length := len(temp)
-	var body []byte
-	//are we wasting more than 10% space?
-	if cap(temp) > (length + length/10) {
-		body = make([]byte, length)
-		copy(body, temp)
-	} else {
-		body = temp
-	}
+	debug.FreeOSMemory()
 }
 
 // copyHeader copies header values from src to dst, adding to any existing
@@ -170,6 +163,7 @@ func copyHeader(dst, src http.Header, keys ...string) {
 			dst.Add(k, v)
 		}
 	}
+	debug.FreeOSMemory()
 }
 
 // allowed determines whether the specified request contains an allowed
@@ -177,18 +171,22 @@ func copyHeader(dst, src http.Header, keys ...string) {
 // allowed.
 func (p *Proxy) allowed(r *Request) error {
 	if len(p.Referrers) > 0 && !validReferrer(p.Referrers, r.Original) {
+		debug.FreeOSMemory()
 		return fmt.Errorf("request does not contain an allowed referrer: %v", r)
 	}
 
 	if len(p.Whitelist) == 0 && len(p.SignatureKey) == 0 {
+		debug.FreeOSMemory()
 		return nil // no whitelist or signature key, all requests accepted
 	}
 
 	if len(p.Whitelist) > 0 && validHost(p.Whitelist, r.URL) {
+		debug.FreeOSMemory()
 		return nil
 	}
 
 	if len(p.SignatureKey) > 0 && validSignature(p.SignatureKey, r) {
+		debug.FreeOSMemory()
 		return nil
 	}
 
@@ -202,10 +200,11 @@ func validHost(hosts []string, u *url.URL) bool {
 			return true
 		}
 		if strings.HasPrefix(host, "*.") && strings.HasSuffix(u.Host, host[2:]) {
+			debug.FreeOSMemory()
 			return true
 		}
 	}
-
+	debug.FreeOSMemory()
 	return false
 }
 
@@ -215,7 +214,7 @@ func validReferrer(hosts []string, r *http.Request) bool {
 	if err != nil { // malformed or blank header, just deny
 		return false
 	}
-
+	debug.FreeOSMemory()
 	return validHost(hosts, u)
 }
 
@@ -229,13 +228,14 @@ func validSignature(key []byte, r *Request) bool {
 	got, err := base64.URLEncoding.DecodeString(sig)
 	if err != nil {
 		glog.Errorf("error base64 decoding signature %q", r.Options.Signature)
+		debug.FreeOSMemory()
 		return false
 	}
 
 	mac := hmac.New(sha256.New, key)
 	mac.Write([]byte(r.URL.String()))
 	want := mac.Sum(nil)
-
+	debug.FreeOSMemory()
 	return hmac.Equal(got, want)
 }
 
@@ -248,21 +248,25 @@ func should304(req *http.Request, resp *http.Response) bool {
 	// matches all etags
 	etag := resp.Header.Get("Etag")
 	if etag != "" && etag == req.Header.Get("If-None-Match") {
+		debug.FreeOSMemory()
 		return true
 	}
 
 	lastModified, err := time.Parse(time.RFC1123, resp.Header.Get("Last-Modified"))
 	if err != nil {
+		debug.FreeOSMemory()
 		return false
 	}
 	ifModSince, err := time.Parse(time.RFC1123, req.Header.Get("If-Modified-Since"))
 	if err != nil {
+		debug.FreeOSMemory()
 		return false
 	}
 	if lastModified.Before(ifModSince) {
+		debug.FreeOSMemory()
 		return true
 	}
-
+	debug.FreeOSMemory()
 	return false
 }
 
@@ -285,6 +289,7 @@ func (t *TransformingTransport) RoundTrip(req *http.Request) (*http.Response, er
 	if req.URL.Fragment == "" {
 		// normal requests pass through
 		glog.Infof("fetching remote URL: %v", req.URL)
+		debug.FreeOSMemory()
 		return t.Transport.RoundTrip(req)
 	}
 
@@ -292,17 +297,20 @@ func (t *TransformingTransport) RoundTrip(req *http.Request) (*http.Response, er
 	u.Fragment = ""
 	resp, err := t.CachingClient.Get(u.String())
 	if err != nil {
+		debug.FreeOSMemory()
 		return nil, err
 	}
 
 	if should304(req, resp) {
 		// bare 304 response, full response will be used from cache
+		debug.FreeOSMemory()
 		return &http.Response{StatusCode: http.StatusNotModified}, nil
 	}
 
 	defer resp.Body.Close()
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
+		debug.FreeOSMemory()
 		return nil, err
 	}
 
@@ -324,6 +332,6 @@ func (t *TransformingTransport) RoundTrip(req *http.Request) (*http.Response, er
 	})
 	fmt.Fprintf(buf, "Content-Length: %d\n\n", len(img))
 	buf.Write(img)
-
+	debug.FreeOSMemory()
 	return http.ReadResponse(bufio.NewReader(buf), req)
 }

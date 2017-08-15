@@ -286,9 +286,9 @@ func NewRequest(r *http.Request, baseURL *url.URL) (*Request, error) {
 		req.URL = baseURL.ResolveReference(req.URL)
 	}
 
-	if !req.URL.IsAbs() {
-		return nil, URLError{"must provide absolute remote URL", r.URL}
-	}
+	// if !req.URL.IsAbs() {
+	// 	return nil, URLError{"must provide absolute remote URL", r.URL}
+	// }
 
 	if req.URL.Scheme != "http" && req.URL.Scheme != "https" {
 		return nil, URLError{"remote URL must have http or https scheme", r.URL}

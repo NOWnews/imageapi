@@ -47,7 +47,6 @@ var referrers = flag.String("referrers", "", "comma separated list of allowed re
 var baseURL = flag.String("baseURL", "", "default base URL for relative remote URLs")
 var cache = flag.String("cache", "", "location to cache images (see https://github.com/willnorris/imageproxy#cache)")
 var cacheDir = flag.String("cacheDir", "", "(Deprecated; use 'cache' instead) directory to use for file cache")
-var cacheSize = flag.Uint64("cacheSize", 0, "Deprecated: this flag does nothing")
 var signatureKey = flag.String("signatureKey", "", "HMAC key used in calculating request signatures")
 var scaleUp = flag.Bool("scaleUp", false, "allow images to scale beyond their original dimensions")
 var timeout = flag.Duration("timeout", 0, "time limit for requests served by this proxy")
@@ -99,8 +98,8 @@ func main() {
 	server := &http.Server{
 		Addr:    *addr,
 		Handler: p,
+		// WriteTimeout: 5 * time.Second,
 	}
-	fmt.Println("======")
 	fmt.Printf("imageproxy (version %v) listening on %s\n", VERSION, server.Addr)
 	log.Fatal(server.ListenAndServe())
 }

@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"net/url"
 	"runtime"
+	"runtime/debug"
 	"strings"
 	"time"
 
@@ -155,7 +156,7 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(resp.StatusCode)
 
 	io.Copy(w, resp.Body)
-	fmt.Println("+================")
+	debug.FreeOSMemory()
 	runtime.GC()
 }
 

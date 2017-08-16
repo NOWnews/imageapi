@@ -142,6 +142,13 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 	//Enable CORS for 3rd party applications
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
+	if len(w.Header().Get("Expires")) == 0 {
+		expireTime := time.Now().AddDate(0, 0, 10)
+		w.Header().Set("Expires", expireTime.Format("Mon Jan _2 15:04:05 2006"))
+	}
+
+	fmt.Println(w.Header().Get("Expires"))
+
 	w.WriteHeader(resp.StatusCode)
 
 	io.Copy(w, resp.Body)
@@ -160,10 +167,11 @@ func copyHeader(dst, src http.Header, keys ...string) {
 	for _, key := range keys {
 		k := http.CanonicalHeaderKey(key)
 		for _, v := range src[k] {
+			fmt.Println("===========")
+			fmt.Println(k)
 			dst.Add(k, v)
 		}
 	}
-	debug.FreeOSMemory()
 }
 
 // allowed determines whether the specified request contains an allowed

@@ -156,8 +156,6 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(resp.StatusCode)
 
 	io.Copy(w, resp.Body)
-	debug.FreeOSMemory()
-	runtime.GC()
 }
 
 // copyHeader copies header values from src to dst, adding to any existing
@@ -325,5 +323,7 @@ func (t *TransformingTransport) RoundTrip(req *http.Request) (*http.Response, er
 	})
 	fmt.Fprintf(buf, "Content-Length: %d\n\n", len(img))
 	buf.Write(img)
+	debug.FreeOSMemory()
+	runtime.GC()
 	return http.ReadResponse(bufio.NewReader(buf), req)
 }

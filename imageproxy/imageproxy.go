@@ -144,7 +144,7 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 
 	if len(w.Header().Get("Expires")) == 0 {
 		expireTime := time.Now().AddDate(0, 0, 10)
-		w.Header().Set("Expires", expireTime.Format("Mon Jan _2 15:04:05 2006"))
+		w.Header().Set("Expires", expireTime.Format("Mon _2 Jan 2006 15:04:05 GMT"))
 	}
 
 	fmt.Println(w.Header().Get("Expires"))
@@ -167,8 +167,6 @@ func copyHeader(dst, src http.Header, keys ...string) {
 	for _, key := range keys {
 		k := http.CanonicalHeaderKey(key)
 		for _, v := range src[k] {
-			fmt.Println("===========")
-			fmt.Println(k)
 			dst.Add(k, v)
 		}
 	}

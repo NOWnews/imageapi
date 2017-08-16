@@ -21,6 +21,8 @@ import (
 	_ "image/gif" // register gif format
 	"image/jpeg"
 	"image/png"
+	"runtime"
+	"runtime/debug"
 
 	"github.com/disintegration/imaging"
 	_ "golang.org/x/image/webp" // register webp format
@@ -84,6 +86,8 @@ func Transform(img []byte, opt Options) ([]byte, error) {
 	default:
 		return nil, fmt.Errorf("unsupported format: %v", format)
 	}
+	debug.FreeOSMemory()
+	runtime.GC()
 	return buf.Bytes(), nil
 }
 

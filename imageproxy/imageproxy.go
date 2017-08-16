@@ -173,6 +173,8 @@ func copyHeader(dst, src http.Header, keys ...string) {
 			dst.Add(k, v)
 		}
 	}
+	debug.FreeOSMemory()
+	runtime.GC()
 }
 
 // allowed determines whether the specified request contains an allowed

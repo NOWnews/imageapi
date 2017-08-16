@@ -11,8 +11,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"runtime"
-	"runtime/debug"
 	"strings"
 	"time"
 
@@ -173,8 +171,6 @@ func copyHeader(dst, src http.Header, keys ...string) {
 			dst.Add(k, v)
 		}
 	}
-	debug.FreeOSMemory()
-	runtime.GC()
 }
 
 // allowed determines whether the specified request contains an allowed
@@ -325,7 +321,5 @@ func (t *TransformingTransport) RoundTrip(req *http.Request) (*http.Response, er
 	})
 	fmt.Fprintf(buf, "Content-Length: %d\n\n", len(img))
 	buf.Write(img)
-	debug.FreeOSMemory()
-	runtime.GC()
 	return http.ReadResponse(bufio.NewReader(buf), req)
 }

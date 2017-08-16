@@ -11,7 +11,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"runtime/debug"
 	"strings"
 	"time"
 
@@ -121,7 +120,6 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 		msg := fmt.Sprintf("error fetching remote image: %v", err)
 		glog.Error(msg)
 		http.Error(w, msg, http.StatusInternalServerError)
-		debug.FreeOSMemory()
 		return
 	}
 	defer resp.Body.Close()
@@ -133,7 +131,6 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 
 	if should304(r, resp) {
 		w.WriteHeader(http.StatusNotModified)
-		debug.FreeOSMemory()
 		return
 	}
 
@@ -232,7 +229,6 @@ func validSignature(key []byte, r *Request) bool {
 	got, err := base64.URLEncoding.DecodeString(sig)
 	if err != nil {
 		glog.Errorf("error base64 decoding signature %q", r.Options.Signature)
-		debug.FreeOSMemory()
 		return false
 	}
 

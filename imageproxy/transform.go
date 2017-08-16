@@ -21,7 +21,6 @@ import (
 	_ "image/gif" // register gif format
 	"image/jpeg"
 	"image/png"
-	"runtime/debug"
 
 	"github.com/disintegration/imaging"
 	_ "golang.org/x/image/webp" // register webp format
@@ -39,7 +38,6 @@ var resampleFilter = imaging.Lanczos
 // bytes of a similarly encoded image is returned.
 func Transform(img []byte, opt Options) ([]byte, error) {
 	if !opt.transform() {
-		debug.FreeOSMemory()
 		// bail if no transformation was requested
 		return img, nil
 	}
@@ -86,7 +84,6 @@ func Transform(img []byte, opt Options) ([]byte, error) {
 	default:
 		return nil, fmt.Errorf("unsupported format: %v", format)
 	}
-	debug.FreeOSMemory()
 	return buf.Bytes(), nil
 }
 

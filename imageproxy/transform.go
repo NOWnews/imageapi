@@ -125,7 +125,6 @@ func resizeParams(m image.Image, opt Options) (w, h int, resize bool) {
 	if (w == imgW || w == 0) && (h == imgH || h == 0) {
 		return 0, 0, false
 	}
-	debug.FreeOSMemory()
 	return w, h, true
 }
 
@@ -162,6 +161,5 @@ func transformImage(m image.Image, opt Options) image.Image {
 	case 270:
 		m = imaging.Rotate270(m)
 	}
-	debug.FreeOSMemory()
 	return m
 }

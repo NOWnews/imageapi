@@ -142,21 +142,22 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 	//Enable CORS for 3rd party applications
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
+	//Reset response header
 	// set Cache Control max-age=864000
 	w.Header().Del("Cache-Control")
-	w.Header().Set("Cache-Control", "max-age=864000, must-revalidate")
+	w.Header().Add("Cache-Control", "max-age=864000, must-revalidate")
 
 	// set Expires
 	w.Header().Del("Expires")
 	expireTime := time.Now().AddDate(0, 0, 10)
-	w.Header().Set("Expires", expireTime.Format("Mon _2 Jan 2006 15:04:05 GMT"))
+	w.Header().Add("Expires", expireTime.Format("Mon _2 Jan 2006 15:04:05 GMT"))
 
 	fmt.Println(w.Header().Get("Expires"))
 
 	w.WriteHeader(resp.StatusCode)
 
 	io.Copy(w, resp.Body)
-	debug.FreeOSMemory()
+	w = nil
 }
 
 // copyHeader copies header values from src to dst, adding to any existing
@@ -181,22 +182,18 @@ func copyHeader(dst, src http.Header, keys ...string) {
 // allowed.
 func (p *Proxy) allowed(r *Request) error {
 	if len(p.Referrers) > 0 && !validReferrer(p.Referrers, r.Original) {
-		debug.FreeOSMemory()
 		return fmt.Errorf("request does not contain an allowed referrer: %v", r)
 	}
 
 	if len(p.Whitelist) == 0 && len(p.SignatureKey) == 0 {
-		debug.FreeOSMemory()
 		return nil // no whitelist or signature key, all requests accepted
 	}
 
 	if len(p.Whitelist) > 0 && validHost(p.Whitelist, r.URL) {
-		debug.FreeOSMemory()
 		return nil
 	}
 
 	if len(p.SignatureKey) > 0 && validSignature(p.SignatureKey, r) {
-		debug.FreeOSMemory()
 		return nil
 	}
 
@@ -210,11 +207,9 @@ func validHost(hosts []string, u *url.URL) bool {
 			return true
 		}
 		if strings.HasPrefix(host, "*.") && strings.HasSuffix(u.Host, host[2:]) {
-			debug.FreeOSMemory()
 			return true
 		}
 	}
-	debug.FreeOSMemory()
 	return false
 }
 
@@ -224,7 +219,6 @@ func validReferrer(hosts []string, r *http.Request) bool {
 	if err != nil { // malformed or blank header, just deny
 		return false
 	}
-	debug.FreeOSMemory()
 	return validHost(hosts, u)
 }
 
@@ -245,7 +239,6 @@ func validSignature(key []byte, r *Request) bool {
 	mac := hmac.New(sha256.New, key)
 	mac.Write([]byte(r.URL.String()))
 	want := mac.Sum(nil)
-	debug.FreeOSMemory()
 	return hmac.Equal(got, want)
 }
 
@@ -258,25 +251,20 @@ func should304(req *http.Request, resp *http.Response) bool {
 	// matches all etags
 	etag := resp.Header.Get("Etag")
 	if etag != "" && etag == req.Header.Get("If-None-Match") {
-		debug.FreeOSMemory()
 		return true
 	}
 
 	lastModified, err := time.Parse(time.RFC1123, resp.Header.Get("Last-Modified"))
 	if err != nil {
-		debug.FreeOSMemory()
 		return false
 	}
 	ifModSince, err := time.Parse(time.RFC1123, req.Header.Get("If-Modified-Since"))
 	if err != nil {
-		debug.FreeOSMemory()
 		return false
 	}
 	if lastModified.Before(ifModSince) {
-		debug.FreeOSMemory()
 		return true
 	}
-	debug.FreeOSMemory()
 	return false
 }
 
@@ -299,7 +287,6 @@ func (t *TransformingTransport) RoundTrip(req *http.Request) (*http.Response, er
 	if req.URL.Fragment == "" {
 		// normal requests pass through
 		glog.Infof("fetching remote URL: %v", req.URL)
-		debug.FreeOSMemory()
 		return t.Transport.RoundTrip(req)
 	}
 
@@ -307,20 +294,17 @@ func (t *TransformingTransport) RoundTrip(req *http.Request) (*http.Response, er
 	u.Fragment = ""
 	resp, err := t.CachingClient.Get(u.String())
 	if err != nil {
-		debug.FreeOSMemory()
 		return nil, err
 	}
 
 	if should304(req, resp) {
 		// bare 304 response, full response will be used from cache
-		debug.FreeOSMemory()
 		return &http.Response{StatusCode: http.StatusNotModified}, nil
 	}
 
 	defer resp.Body.Close()
 	b, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		debug.FreeOSMemory()
 		return nil, err
 	}
 
@@ -342,6 +326,5 @@ func (t *TransformingTransport) RoundTrip(req *http.Request) (*http.Response, er
 	})
 	fmt.Fprintf(buf, "Content-Length: %d\n\n", len(img))
 	buf.Write(img)
-	debug.FreeOSMemory()
 	return http.ReadResponse(bufio.NewReader(buf), req)
 }

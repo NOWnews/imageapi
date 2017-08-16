@@ -142,6 +142,10 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 	//Enable CORS for 3rd party applications
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
+	if len(w.Header().Get("Cache-Control")) == 0 {
+		w.Header().Set("Cache-Control", "max-age=864000, must-revalidate")
+	}
+
 	if len(w.Header().Get("Expires")) == 0 {
 		expireTime := time.Now().AddDate(0, 0, 10)
 		w.Header().Set("Expires", expireTime.Format("Mon _2 Jan 2006 15:04:05 GMT"))

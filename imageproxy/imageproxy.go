@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"runtime/debug"
 	"strings"
 	"time"
 
@@ -154,7 +155,8 @@ func (p *Proxy) serveImage(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(resp.StatusCode)
 
 	io.Copy(w, resp.Body)
-	w = nil
+	fmt.Println("+================")
+	debug.FreeOSMemory()
 }
 
 // copyHeader copies header values from src to dst, adding to any existing

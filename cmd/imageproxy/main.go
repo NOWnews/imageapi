@@ -24,7 +24,7 @@ import (
 	"net/http/pprof"
 	"net/url"
 	"strings"
-
+	"time"
 	"imageapi/imageproxy"
 	
 	"github.com/gregjones/httpcache"
@@ -103,7 +103,7 @@ func main() {
 	server := &http.Server{
 		Addr:    *addr,
 		Handler: p,
-		// WriteTimeout: 5 * time.Second,
+		WriteTimeout: 5 * time.Second,
 	}
 	
 	r := http.NewServeMux()

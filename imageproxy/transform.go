@@ -1,17 +1,3 @@
-// Copyright 2013 Google Inc. All rights reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 package imageproxy
 
 import (
@@ -25,8 +11,7 @@ import (
 	"runtime/debug"
 
 	"github.com/disintegration/imaging"
-	_ "golang.org/x/image/webp" // register webp format
-	// "willnorris.com/go/gifresize"
+
 )
 
 // default compression quality of resized jpegs
@@ -58,14 +43,6 @@ func Transform(img []byte, opt Options) ([]byte, error) {
 	buf := new(bytes.Buffer)
 	fmt.Println(format)
 	switch format {
-	// case "gif":
-	// 	fn := func(img image.Image) image.Image {
-	// 		return transformImage(img, opt)
-	// 	}
-	// 	err = gifresize.Process(buf, bytes.NewReader(img), fn)
-	// 	if err != nil {
-	// 		return nil, err
-	// 	}
 	case "jpeg", "webp": // default to encoding webp as jpeg
 		quality := opt.Quality
 		if quality == 0 {
@@ -145,22 +122,5 @@ func transformImage(m image.Image, opt Options) image.Image {
 		}
 	}
 
-	// flip
-	// if opt.FlipVertical {
-	// 	m = imaging.FlipV(m)
-	// }
-	// if opt.FlipHorizontal {
-	// 	m = imaging.FlipH(m)
-	// }
-
-	// rotate
-	// switch opt.Rotate {
-	// case 90:
-	// 	m = imaging.Rotate90(m)
-	// case 180:
-	// 	m = imaging.Rotate180(m)
-	// case 270:
-	// 	m = imaging.Rotate270(m)
-	// }
 	return m
 }

@@ -21,12 +21,12 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	_ "net/http/pprof"
+	"net/http/pprof"
 	"net/url"
 	"strings"
 
 	"imageapi/imageproxy"
-
+	
 	"github.com/gregjones/httpcache"
 	"github.com/gregjones/httpcache/diskcache"
 	"github.com/peterbourgon/diskv"
@@ -52,7 +52,12 @@ var scaleUp = flag.Bool("scaleUp", false, "allow images to scale beyond their or
 var timeout = flag.Duration("timeout", 0, "time limit for requests served by this proxy")
 var version = flag.Bool("version", false, "print version information")
 
+func hiHandler(w http.ResponseWriter, r *http.Request) {
+    w.Write([]byte("hi"))
+}
+
 func main() {
+	
 	flag.Parse()
 
 	if *version {
@@ -100,7 +105,21 @@ func main() {
 		Handler: p,
 		// WriteTimeout: 5 * time.Second,
 	}
+	
+	r := http.NewServeMux()
+
+    // Register pprof handlers
+    r.HandleFunc("/debug/pprof/", pprof.Index)
+    r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+    r.HandleFunc("/debug/pprof/profile", pprof.Profile)
+    r.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+    r.HandleFunc("/debug/pprof/trace", pprof.Trace)
+
+    // http.ListenAndServe(":8080", r)
 	fmt.Printf("imageproxy (version %v) listening on %s\n", VERSION, server.Addr)
+	go func() {
+        log.Println(http.ListenAndServe("localhost:6060", nil)) 
+	}()
 	log.Fatal(server.ListenAndServe())
 }
 

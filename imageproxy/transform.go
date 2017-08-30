@@ -26,7 +26,7 @@ import (
 
 	"github.com/disintegration/imaging"
 	_ "golang.org/x/image/webp" // register webp format
-	"willnorris.com/go/gifresize"
+	// "willnorris.com/go/gifresize"
 )
 
 // default compression quality of resized jpegs
@@ -58,14 +58,14 @@ func Transform(img []byte, opt Options) ([]byte, error) {
 	buf := new(bytes.Buffer)
 	fmt.Println(format)
 	switch format {
-	case "gif":
-		fn := func(img image.Image) image.Image {
-			return transformImage(img, opt)
-		}
-		err = gifresize.Process(buf, bytes.NewReader(img), fn)
-		if err != nil {
-			return nil, err
-		}
+	// case "gif":
+	// 	fn := func(img image.Image) image.Image {
+	// 		return transformImage(img, opt)
+	// 	}
+	// 	err = gifresize.Process(buf, bytes.NewReader(img), fn)
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
 	case "jpeg", "webp": // default to encoding webp as jpeg
 		quality := opt.Quality
 		if quality == 0 {
@@ -146,21 +146,21 @@ func transformImage(m image.Image, opt Options) image.Image {
 	}
 
 	// flip
-	if opt.FlipVertical {
-		m = imaging.FlipV(m)
-	}
-	if opt.FlipHorizontal {
-		m = imaging.FlipH(m)
-	}
+	// if opt.FlipVertical {
+	// 	m = imaging.FlipV(m)
+	// }
+	// if opt.FlipHorizontal {
+	// 	m = imaging.FlipH(m)
+	// }
 
 	// rotate
-	switch opt.Rotate {
-	case 90:
-		m = imaging.Rotate90(m)
-	case 180:
-		m = imaging.Rotate180(m)
-	case 270:
-		m = imaging.Rotate270(m)
-	}
+	// switch opt.Rotate {
+	// case 90:
+	// 	m = imaging.Rotate90(m)
+	// case 180:
+	// 	m = imaging.Rotate180(m)
+	// case 270:
+	// 	m = imaging.Rotate270(m)
+	// }
 	return m
 }

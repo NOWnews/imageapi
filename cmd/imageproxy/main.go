@@ -1,33 +1,16 @@
-// Copyright 2013 Google Inc. All rights reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
-// imageproxy starts an HTTP server that proxies requests for remote images.
 package main
 
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"imageapi/imageproxy"
 	"log"
 	"net/http"
 	"net/http/pprof"
 	"net/url"
 	"strings"
 	"time"
-	"imageapi/imageproxy"
-	
-	"github.com/gregjones/httpcache"
+
 	"github.com/gregjones/httpcache/diskcache"
 	"github.com/peterbourgon/diskv"
 )
@@ -46,18 +29,16 @@ var whitelist = flag.String("whitelist", "", "comma separated list of allowed re
 var referrers = flag.String("referrers", "", "comma separated list of allowed referring hosts")
 var baseURL = flag.String("baseURL", "", "default base URL for relative remote URLs")
 var cache = flag.String("cache", "", "location to cache images")
-var cacheDir = flag.String("cacheDir", "", "(Deprecated; use 'cache' instead) directory to use for file cache")
-var signatureKey = flag.String("signatureKey", "", "HMAC key used in calculating request signatures")
 var scaleUp = flag.Bool("scaleUp", false, "allow images to scale beyond their original dimensions")
 var timeout = flag.Duration("timeout", 0, "time limit for requests served by this proxy")
 var version = flag.Bool("version", false, "print version information")
 
 func hiHandler(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("hi"))
+	w.Write([]byte("hi"))
 }
 
 func main() {
-	
+
 	flag.Parse()
 
 	if *version {
@@ -65,10 +46,12 @@ func main() {
 		return
 	}
 
-	c, err := parseCache()
+	u, err := url.Parse(*cache)
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	c := diskCache(u.Path)
 
 	p := imageproxy.NewProxy(nil, c)
 	if *whitelist != "" {
@@ -76,18 +59,6 @@ func main() {
 	}
 	if *referrers != "" {
 		p.Referrers = strings.Split(*referrers, ",")
-	}
-	if *signatureKey != "" {
-		key := []byte(*signatureKey)
-		if strings.HasPrefix(*signatureKey, "@") {
-			file := strings.TrimPrefix(*signatureKey, "@")
-			var err error
-			key, err = ioutil.ReadFile(file)
-			if err != nil {
-				log.Fatalf("error reading signature file: %v", err)
-			}
-		}
-		p.SignatureKey = key
 	}
 	if *baseURL != "" {
 		var err error
@@ -101,52 +72,25 @@ func main() {
 	p.ScaleUp = *scaleUp
 
 	server := &http.Server{
-		Addr:    *addr,
-		Handler: p,
+		Addr:         *addr,
+		Handler:      p,
 		WriteTimeout: 5 * time.Second,
 	}
-	
+
 	r := http.NewServeMux()
 
-    // Register pprof handlers
-    r.HandleFunc("/debug/pprof/", pprof.Index)
-    r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
-    r.HandleFunc("/debug/pprof/profile", pprof.Profile)
-    r.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
-    r.HandleFunc("/debug/pprof/trace", pprof.Trace)
+	// Register pprof handlers
+	r.HandleFunc("/debug/pprof/", pprof.Index)
+	r.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
+	r.HandleFunc("/debug/pprof/profile", pprof.Profile)
+	r.HandleFunc("/debug/pprof/symbol", pprof.Symbol)
+	r.HandleFunc("/debug/pprof/trace", pprof.Trace)
 
-    // http.ListenAndServe(":8080", r)
 	fmt.Printf("imageproxy (version %v) listening on %s\n", VERSION, server.Addr)
 	go func() {
-        log.Println(http.ListenAndServe("localhost:6060", nil)) 
+		log.Println(http.ListenAndServe("localhost:6060", nil))
 	}()
 	log.Fatal(server.ListenAndServe())
-}
-
-// parseCache parses the cache-related flags and returns the specified Cache implementation.
-func parseCache() (imageproxy.Cache, error) {
-	if *cache == "" {
-		if *cacheDir != "" {
-			return diskCache(*cacheDir), nil
-		}
-		return nil, nil
-	}
-
-	if *cache == "memory" {
-		return httpcache.NewMemoryCache(), nil
-	}
-
-	u, err := url.Parse(*cache)
-	if err != nil {
-		return nil, fmt.Errorf("error parsing cache flag: %v", err)
-	}
-
-	switch u.Scheme {
-	case "file":
-		fallthrough
-	default:
-		return diskCache(u.Path), nil
-	}
 }
 
 func diskCache(path string) *diskcache.Cache {

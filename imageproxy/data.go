@@ -17,7 +17,6 @@ package imageproxy
 import (
 	"bytes"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -279,7 +278,7 @@ func NewRequest(r *http.Request, baseURL *url.URL) (*Request, error) {
 		buffer.WriteString(w)
 		buffer.WriteString("x")
 	} else {
-		log.Fatal("width is empty")
+		fmt.Println("width is empty")
 	}
 
 	if len(h) > 0 {
@@ -292,7 +291,7 @@ func NewRequest(r *http.Request, baseURL *url.URL) (*Request, error) {
 		buffer.WriteString("q")
 		buffer.WriteString(q)
 	} else {
-		log.Fatal("quality is empty")
+		fmt.Println("quality is empty")
 	}
 
 	buffer.WriteString("/")
@@ -300,7 +299,7 @@ func NewRequest(r *http.Request, baseURL *url.URL) (*Request, error) {
 	if len(src) > 0 {
 		buffer.WriteString(src)
 	} else {
-		log.Fatal("src is empty")
+		fmt.Println("src is empty")
 	}
 
 	path := buffer.String()

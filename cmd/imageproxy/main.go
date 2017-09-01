@@ -3,13 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
-	"imageapi/imageproxy"
 	"log"
 	"net/http"
 	"net/http/pprof"
 	"net/url"
 	"strings"
 	"time"
+
+	"imageapi/imageproxy"
 
 	"github.com/gregjones/httpcache/diskcache"
 	"github.com/peterbourgon/diskv"

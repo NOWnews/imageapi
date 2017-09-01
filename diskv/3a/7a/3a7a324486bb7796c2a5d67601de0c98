@@ -1,0 +1,10 @@
+HTTP/1.1 400 Bad Request
+Content-Length: 382
+Age: 0
+Connection: keep-alive
+Content-Type: text/html; charset=UTF-8
+Date: Thu, 31 Aug 2017 11:47:18 GMT
+X-Cache: MISS
+X-Cache-Hits: 0
+
+<h1>A ImgapiV2 error has occured</h1>The following error(s) occured:<br /><ul><li>Could not find the internal image you specified.</li></ul><br /><br />Query String : h=30&amp;q=100&amp;q=85&amp;src=https://img.nownews.com/nownews_production/images/59a7e7b781971c28ba6744d0_201708311840.jpg&amp;src=https://imgapiv2.nownews.com/?w=1080&amp;w=1080<br />Imgapiv2 version : 2.0.1</pre>

@@ -15,7 +15,9 @@
 package imageproxy
 
 import (
+	"bytes"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"regexp"
@@ -263,8 +265,46 @@ func (r Request) String() string {
 func NewRequest(r *http.Request, baseURL *url.URL) (*Request, error) {
 	var err error
 	req := &Request{Original: r}
+	queryString := r.URL.Query()
 
-	path := r.URL.Path[1:] // strip leading slash
+	w := queryString.Get("w")
+	h := queryString.Get("h")
+	q := queryString.Get("q")
+	src := queryString.Get("src")
+
+	// path := r.URL.Path[1:] // strip leading slash
+	var buffer bytes.Buffer
+
+	if len(w) > 0 && len(h) > 0 {
+		buffer.WriteString(w)
+		buffer.WriteString("x")
+	} else {
+		log.Fatal("width is empty")
+	}
+
+	if len(h) > 0 {
+		buffer.WriteString(h)
+	}
+
+	buffer.WriteString(",")
+
+	if len(q) > 0 {
+		buffer.WriteString("q")
+		buffer.WriteString(q)
+	} else {
+		log.Fatal("quality is empty")
+	}
+
+	buffer.WriteString("/")
+
+	if len(src) > 0 {
+		buffer.WriteString(src)
+	} else {
+		log.Fatal("src is empty")
+	}
+
+	path := buffer.String()
+	fmt.Println(path)
 	req.URL, err = parseURL(path)
 	if err != nil || !req.URL.IsAbs() {
 		// first segment should be options

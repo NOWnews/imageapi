@@ -1,0 +1,24 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+Queue	../wayne.py	/^import Queue$/;"	kind:namespace	line:3
+__init__	../wayne.py	/^	def __init__(self):$/;"	kind:member	line:13
+close_phantomjs	../wayne.py	/^	def close_phantomjs(self):$/;"	kind:member	line:49
+close_threading	../wayne.py	/^		def close_threading():$/;"	kind:function	line:54
+conphantomjs	../wayne.py	/^class conphantomjs:$/;"	kind:class	line:7
+cur	../wayne.py	/^	cur=conphantomjs()$/;"	kind:variable	line:72
+getbody	../wayne.py	/^	def getbody(self,url):$/;"	kind:member	line:15
+jiange	../wayne.py	/^	jiange=0.00001                  ##開啟phantomjs間隔$/;"	kind:variable	line:9
+open_phantomjs	../wayne.py	/^	def open_phantomjs(self):$/;"	kind:member	line:30
+open_threading	../wayne.py	/^		def open_threading():$/;"	kind:function	line:34
+path	../wayne.py	/^	path="\/usr\/local\/Cellar\/phantomjs\/2.1.1\/bin\/phantomjs" ##phantomjs路徑位置$/;"	kind:variable	line:11
+phantomjs_max	../wayne.py	/^	phantomjs_max=1             ##同時開啟phantomjs個數$/;"	kind:variable	line:8
+th	../wayne.py	/^	th=[]$/;"	kind:variable	line:505
+threading	../wayne.py	/^import threading$/;"	kind:namespace	line:5
+time	../wayne.py	/^import time$/;"	kind:namespace	line:6
+timeout	../wayne.py	/^	timeout=20                  ##設置phantomjs超時時間$/;"	kind:variable	line:10
+wayne.py	../wayne.py	1;"	kind:file	line:1
+webdriver	../wayne.py	/^from selenium import webdriver$/;"	kind:namespace	line:4

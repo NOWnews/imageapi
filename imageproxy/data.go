@@ -274,15 +274,17 @@ func NewRequest(r *http.Request, baseURL *url.URL) (*Request, error) {
 	// path := r.URL.Path[1:] // strip leading slash
 	var buffer bytes.Buffer
 
-	if len(w) > 0 && len(h) > 0 {
-		buffer.WriteString(w)
-		buffer.WriteString("x")
-	} else {
+	if len(w) == 0 {
 		fmt.Println("width is empty")
 	}
 
-	if len(h) > 0 {
+	if len(w) > 0 && len(h) > 0 {
+		buffer.WriteString(w)
+		buffer.WriteString("x")
 		buffer.WriteString(h)
+	} else {
+		buffer.WriteString(w)
+		buffer.WriteString("x")
 	}
 
 	buffer.WriteString(",")

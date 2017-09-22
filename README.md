@@ -126,7 +126,7 @@ ps -ef | grep main
 kill -9 PID
 ```
 
-# 安裝supervisor管理進程（（這段還沒學要請CY哥幫補充
+# 安裝supervisor管理進程
 
 ### centos上安裝支援python安裝工具
 
@@ -140,7 +140,7 @@ yum install python-setuptools
 easy_install supervisor
 ```
 
-### 將config指向((????這段還沒學
+### 將config指向 要用的config
 
 ```
 /usr/bin/supervisord -c /etc/supervisord.conf

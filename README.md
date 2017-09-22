@@ -76,7 +76,7 @@ echo $GOPATH
 創建資料夾擺放原始碼
 
 
-###創建glang資料夾
+### 創建glang資料夾
 ```
 mkdir golang
 
@@ -87,71 +87,71 @@ mkdir src
 
 cd src/
 ```
-###clone原始碼
+### clone原始碼
 ```
 git clone https://github.com/NOWnews/imageapi.git
 ```
-###啟動程式擺放的位置
+### 啟動程式擺放的位置
 ```
 cd imageapi/cmd/imageproxy/
 ```
-###安裝第三方套件
+### 安裝第三方套件
 ```
 go get willnorris.com/go/imageproxy/third_party/http
 ```
-###go build 執行檔
+### go build 執行檔
 ```
 go build main.go
 ```
 
-###執行程式並將服務掛在8080port下 指定cache資料夾位置 設定白名單 並在背景執行
+### 執行程式並將服務掛在8080port下 指定cache資料夾位置 設定白名單 並在背景執行
 ```
 ./main -addr 0.0.0.0:8080 -cache /tmp/imagelab -whitelist img.nownews.com,s.nownews.com,rssimg.nownews.com,e.now
 news.com,legacy.nownews.com &
 ```
-###查看log是否有進來
+### 查看log是否有進來
 ```
 tail -f /tmp/main.INFO
 ```
-###查看錯誤log 
+### 查看錯誤log 
 ```
 tail -f /tmp/main.ERROR
 ```
-###查看process有沒有啟用
+### 查看process有沒有啟用
 ```
 ps -ef | grep main
 ```
-###幹掉進程
+### 幹掉進程
 ```
 kill -9 PID
 ```
 
-#安裝supervisor管理進程（（這段還沒學要請CY哥幫補充
+# 安裝supervisor管理進程（（這段還沒學要請CY哥幫補充
 
-###centos上安裝支援python安裝工具
+### centos上安裝支援python安裝工具
 
 ```
 yum install python-setuptools
 ```
 
-###安裝supervisor
+### 安裝supervisor
 
 ```
 easy_install supervisor
 ```
 
-###將config指向((????這段還沒學
+### 將config指向((????這段還沒學
 
 ```
 /usr/bin/supervisord -c /etc/supervisord.conf
 ```
 
-###修改
+### 修改supervisord config
 ```
 vim supervisord.conf 
 ```
 
-###修改supervisord.conf 內容調整
+### 修改supervisord.conf 內容調整
 
 ```
 [program:golang-http-server]
@@ -169,18 +169,18 @@ stderr_logfile_backups=10
 stderr_capture_maxbytes=1MB
 ```
 
-###啟用supervisor
+### 啟用supervisor
 ```
 supervisorctl
 ```
 
-###查看supervisor進程有沒有跑起來
+### 查看supervisor進程有沒有跑起來
 ```
 ps -ef | grep supervisord
 ```
 
-#固定清理圖片cache
-###shellscript
+# 固定清理圖片cache
+### shellscript
 
 ```
 #/bin/bash
@@ -188,12 +188,12 @@ cmd=`find /tmp/imagelab -type f -mtime +2 -exec rm {} \;`
 $cmd
 ```
 
-###排程修改
+### 排程修改
 ```
 crontab -e 
 ```
 
-###排程修改內容
+### 排程修改內容
 ```
 0 1 * * * /usr/local/golang_service/clean_image_cache.sh
 ```

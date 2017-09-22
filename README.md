@@ -127,30 +127,31 @@ kill -9 PID
 ```
 
 #安裝supervisor管理進程（（這段還沒學要請CY哥幫補充
-centos上安裝支援python安裝工具
+
+###centos上安裝支援python安裝工具
 
 ```
 yum install python-setuptools
 ```
 
-安裝supervisor
+###安裝supervisor
 
 ```
 easy_install supervisor
 ```
 
-將config指向((????這段還沒學
+###將config指向((????這段還沒學
 
 ```
 /usr/bin/supervisord -c /etc/supervisord.conf
 ```
 
-修改
+###修改
 ```
 vim supervisord.conf 
 ```
 
-修改supervisord.conf 內容調整
+###修改supervisord.conf 內容調整
 
 ```
 [program:golang-http-server]

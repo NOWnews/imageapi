@@ -5,7 +5,7 @@
 yum check-update
 yum update
 ```
-## **安裝GVM
+## **安裝GVM**
 ```
 yum group install "Development Tools"
 ```
